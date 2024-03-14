@@ -1,0 +1,76 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_LENGTH 2024
+#define MIN_LENGTH 1945
+
+// Deklarasi fungsi-fungsi
+void lessThanRequired(int *lengthOfText){
+    // Jika panjang teks kurang dari yang ditentukan
+    printf("The length of your text is less than specified, please update your text\n");
+    printf("Length Before : %d\n", *lengthOfText);
+    // Menetapkan panjang teks menjadi panjang minimum
+    *lengthOfText = MIN_LENGTH;
+    printf("The Length is updated to %d\n", *lengthOfText);
+}
+
+void equalThanRequired(int *lengthOfText){
+    // Jika panjang teks sama dengan yang ditentukan
+    printf("Thank you, Your text length is correct\n");
+}
+
+void moreThanRequired(int *lengthOfText){
+    // Jika panjang teks lebih dari yang ditentukan
+    printf("Your text is too long, please reduce the text\n");
+    printf("Length Before : %d\n", *lengthOfText);
+    // Menetapkan panjang teks menjadi panjang minimum
+    *lengthOfText = MIN_LENGTH;
+    printf("The Length is updated to %d\n", *lengthOfText);
+}
+
+// Fungsi untuk memeriksa panjang teks
+int checkLengthRequirement(char* text){
+    int length = strlen(text);
+    if (length < MIN_LENGTH)
+        return 0;
+    else if (length == MIN_LENGTH)
+        return 1;
+    else
+        return 2;
+}
+
+int main() {
+    int lengthOfText, selectOption;
+    FILE *fptr = NULL;
+    char text[MAX_LENGTH];
+
+    // Membuka file untuk dibaca
+    fptr = fopen("file.txt", "r");
+
+    if(fptr == NULL){
+        printf("Error");
+        exit(1);
+    }
+
+    // Membaca teks dari file
+    fgets(text, MAX_LENGTH, fptr);
+
+    fclose(fptr);
+
+    // Memeriksa panjang teks dan mendapatkan pilihan
+    selectOption = checkLengthRequirement(text);
+
+    // Pointer ke lengthOfText
+    int *ptr_lengthOfText = &lengthOfText;
+    // Menetapkan nilai ke lengthOfText
+    *ptr_lengthOfText = strlen(text);
+
+    // Array dari pointer fungsi
+    void (*functions[3])(int *lengthOfText) = {lessThanRequired, equalThanRequired, moreThanRequired};
+
+    // Memanggil fungsi yang sesuai berdasarkan selectOption
+    functions[selectOption](ptr_lengthOfText);
+
+    return 0;
+}
